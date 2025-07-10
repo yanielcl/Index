@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ofertas UI/UX Designer</title>
+  <meta name="description" content="Lista actualizada de empleos de diseñador UI/UX">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f7fa;
+      color: #222;
+    }
+    header {
+      background: #222;
+      color: #fff;
+      padding: 1rem 0.5rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 600px;
+      margin: 1.5rem auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      padding: 1rem 1.2rem 2rem 1.2rem;
+    }
+    h1 {
+      margin: 0.2em 0 0.5em 0;
+      font-size: 1.5em;
+    }
+    .job-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .job {
+      border-bottom: 1px solid #ececec;
+      padding: 1rem 0;
+    }
+    .job:last-child { border-bottom: none; }
+    .job-title {
+      font-weight: bold;
+      color: #293b5f;
+      margin-bottom: 0.3em;
+      font-size: 1.1em;
+    }
+    .job-company {
+      color: #4d648d;
+      font-size: 1em;
+      margin-bottom: 0.2em;
+    }
+    .job-location {
+      color: #888;
+      font-size: 0.95em;
+    }
+    .job-link {
+      display: inline-block;
+      margin-top: 0.3em;
+      color: #1e90ff;
+      text-decoration: none;
+      font-size: 0.97em;
+    }
+    .refresh-btn {
+      display: block;
+      width: 100%;
+      background: #1e90ff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.8em;
+      font-size: 1em;
+      font-weight: 600;
+      margin: 1em 0 0 0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .refresh-btn:hover {
+      background: #0d70d1;
+    }
+    .notify {
+      position: fixed;
+      top: 1.2em;
+      right: 1.2em;
+      background: #fffae6;
+      color: #222;
+      border: 1px solid #ffd700;
+      border-radius: 8px;
+      padding: 1em 1.5em;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+      z-index: 999;
+      font-size: 1em;
+      display: none;
+    }
+    @media (max-width: 700px) {
+      .container {
+        margin: 0.5rem;
+        padding: 1rem 0.4rem 1.2rem 0.4rem;
+      }
+      .notify { right: 0.5em; left: 0.5em; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Ofertas UI/UX Designer</h1>
+    <div style="font-size:1em;">Empleos recientes · Actualizado frecuentemente</div>
+  </header>
+  <div class="container">
+    <button class="refresh-btn" onclick="fetchJobs()">🔄 Actualizar Ofertas</button>
+    <ul class="job-list" id="jobList">
+      <li>Cargando ofertas...</li>
+    </ul>
+  </div>
+  <div class="notify" id="notify"></div>
+  <script>
+    // Simulación de trabajos (puedes conectar a una API real si tienes)
+    const demoJobs = [
+      {
+        title: "UI/UX Designer",
+        company: "Globant",
+        location: "Remoto - LATAM",
+        url: "https://www.glassdoor.com.mx/Empleo/globant-ui-ux-designer-empleos-SRCH_KO0,16_KE17,24.htm"
+      },
+      {
+        title: "Product Designer (UI/UX)",
+        company: "Mercado Libre",
+        location: "Buenos Aires, Argentina",
+        url: "https://www.mercadolibre.com.ar/empleos"
+      },
+      {
+        title: "Diseñador UI/UX Senior",
+        company: "BBVA",
+        location: "Remoto / Madrid, España",
+        url: "https://bbva.talentclue.com/es/node/74693228"
+      },
+      {
+        title: "UX/UI Designer Jr.",
+        company: "Freelancer.com",
+        location: "Remoto",
+        url: "https://www.freelancer.com/jobs/ux-ui-design/"
+      },
+      {
+        title: "UI/UX Designer",
+        company: "Remote OK",
+        location: "Remoto",
+        url: "https://remoteok.com/remote-ui-ux-designer-jobs"
+      }
+    ];
+
+    let lastJobsJSON = "";
+
+    // Mostrar notificación simple en pantalla
+    function showNotify(msg) {
+      const n = document.getElementById('notify');
+      n.textContent = msg;
+      n.style.display = 'block';
+      setTimeout(() => n.style.display = 'none', 3800);
+    }
+
+    // Cargar trabajos (simulado)
+    function fetchJobs() {
+      // Simula fetch con un delay
+      setTimeout(() => {
+        const jobs = demoJobs;
+        const list = document.getElementById('jobList');
+        list.innerHTML = '';
+        jobs.forEach(job => {
+          const li = document.createElement('li');
+          li.className = 'job';
+          li.innerHTML = `
+            <div class="job-title">${job.title}</div>
+            <div class="job-company">${job.company}</div>
+            <div class="job-location">${job.location}</div>
+            <a class="job-link" href="${job.url}" target="_blank">Ver oferta</a>
+          `;
+          list.appendChild(li);
+        });
+        // Notifica si hay nuevos trabajos
+        const jobsJSON = JSON.stringify(jobs);
+        if (lastJobsJSON && jobsJSON !== lastJobsJSON) {
+          showNotify('¡Nuevas ofertas de UI/UX encontradas!');
+        }
+        lastJobsJSON = jobsJSON;
+      }, 850);
+    }
+
+    // Instalar como App (PWA, opcional)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+
+    // Primera carga
+    fetchJobs();
+
+    // Actualización automática cada 60 minutos
+    setInterval(fetchJobs, 60 * 60 * 1000);
+  </script>
+</body>
+</html>
